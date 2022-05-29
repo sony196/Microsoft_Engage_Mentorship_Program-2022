@@ -147,35 +147,14 @@ if (selected == "Dashboard"):
     left_column.plotly_chart(fig_sales_chart, use_container_width=True)
     right_column.plotly_chart(engine_fuel_chart,use_container_width=True)
 
-    @st.cache
-    def lottie_url(url:str):    # This is a function which is developed for animations in dashboard
-        r = requests.get(url)
-        if r.status_code != 200:
-            return None
-        return r.json()
+    st.columns((7,4)) # To make second row visualizations side by side
+    st.title("The price of car corresponding to its milege")
+    line_chart_data = df.copy()
 
-    c1,c2 = st.columns((7,4)) # To make second row visualizations side by side
-    with c1:
-        st.title("The price of car corresponding to its milege")
-        line_chart_data = df.copy()
+    sample_tab = pd.crosstab(line_chart_data['mpg'],line_chart_data['Price_in_thousands'])
+    fig2 = px.bar(sample_tab)
 
-        sample_tab = pd.crosstab(line_chart_data['mpg'],line_chart_data['Price_in_thousands'])
-        fig2 = px.bar(sample_tab)
-
-        st.write(fig2)
-    with c2:
-        lottie_data = lottie_url("https://assets10.lottiefiles.com/packages/lf20_49rdyysj.json")
-        st_lottie(
-            lottie_data,
-            speed=1,
-            reverse=False,
-            loop=True,
-            quality='low',
-            height=700,
-            width=None,
-            key = None,
-        )
-
+    st.write(fig2)
     p1 = df[["Engine_size","cylinders"]]
     st.title("The relation between cylinders and engine size")
     st.line_chart(data=p1, width=0, height=0, use_container_width=True)
